@@ -1,7 +1,11 @@
 package main.ui;
 
 
-public class serach {
+import main.core.Category;
+
+import javax.swing.*;
+
+public class Serach {
 
         private JComboBox<Category> categoryCombo;
         private JTextField minAmountField;

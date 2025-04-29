@@ -1,6 +1,6 @@
 package main.core;
 
-public class Category {
+public enum Category {
         INCOME("Income"),
         FOOD("Food"),
         UTILITIES("Utilities"),
@@ -11,5 +11,11 @@ public class Category {
 
         private final String displayName;
 
+        Category(String displayName) {
+                this.displayName = displayName;
+        }
 
+        public String getDisplayName() {
+                return displayName;
+        }
 }
