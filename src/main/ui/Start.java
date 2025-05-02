@@ -1,6 +1,9 @@
 package main.ui;
 
-import javax.naming.directory.SearchControls;
+import main.core.Transaction;
+import main.core.TransactionController;
+import main.customDynamcStructures.LinkedList;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,10 +11,10 @@ import java.awt.event.*;
 public class Start extends JFrame {
         private TransactionController controller;
         private JTable transactionTable;
-        private TransactionTable tTable;
+        private TransactionTableUI tableModel;
         private AddTransaction addPanel;
-        private Serach searchPanel;
-        private TransactionDetails detailPanel;
+        private Search searchPanel;
+        private TransactionDetailsUI detailPanel;
 
         public Start() {
                 setTitle("Transaction Management System");
@@ -22,24 +25,21 @@ public class Start extends JFrame {
                 controller = new TransactionController();
 
                 initComponents();
-
                 setupLayout();
-
                 addEventListeners();
         }
 
         private void initComponents() {
-                tTable = new TransactionTable(controller.getAllTransactions());
-                transactionTable = new JTable(tTable);
+                tableModel = new TransactionTableUI(controller.getAllTransactions());
+                transactionTable = new JTable(tableModel);
                 transactionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
                 addPanel = new AddTransaction(controller);
-                searchPanel = new Serach(controller);
-                detailPanel = new TransactionDetails();
+                searchPanel = new Search(controller);
+                detailPanel = new TransactionDetailsUI();
         }
 
         private void setupLayout() {
-                // Main layout
                 setLayout(new BorderLayout());
 
                 // Create a split pane for table and details
@@ -71,25 +71,21 @@ public class Start extends JFrame {
         }
 
         private void addEventListeners() {
-                // Add table selection listener
                 transactionTable.getSelectionModel().addListSelectionListener(e -> {
                         if (!e.getValueIsAdjusting()) {
                                 int selectedRow = transactionTable.getSelectedRow();
                                 if (selectedRow >= 0) {
-                                        // Get selected transaction and display details
                                         Transaction transaction = tableModel.getTransactionAt(selectedRow);
                                         detailPanel.displayTransaction(transaction);
                                 }
                         }
                 });
 
-                // Add refresh action
                 addPanel.addTransactionListener(transaction -> {
                         tableModel.refreshData(controller.getAllTransactions());
                         tableModel.fireTableDataChanged();
                 });
 
-                // Add search listener
                 searchPanel.addSearchListener(searchResults -> {
                         tableModel.refreshData(searchResults);
                         tableModel.fireTableDataChanged();
@@ -100,4 +96,6 @@ public class Start extends JFrame {
                 tableModel.refreshData(controller.getAllTransactions());
                 tableModel.fireTableDataChanged();
         }
+
+
 }

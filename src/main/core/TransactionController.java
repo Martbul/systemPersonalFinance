@@ -1,146 +1,137 @@
 package main.core;
 
-        import main.core.Category;
-        import main.customDynamcStructures.LinkedList;
+import main.core.Category;
+import main.customDynamcStructures.LinkedList;
 
-        import java.util.ArrayList;
-        import java.util.Date;
-        import java.util.stream.Collectors;
-
+import java.util.Date;
 
 public class TransactionController {
     private LinkedList<Transaction> transactions;
-    private TransactionDAO dataAccess; // Data access object for persistence
-
+    private int idCounter;
+    private DataAccess dataAccess;
 
     public TransactionController() {
-        dataAccess = new TransactionDAO();
-        transactions = dataAccess.loadAllTransactions();
+        transactions = new LinkedList<>();
+        idCounter = 1;
+        dataAccess = new DataAccess();
     }
 
-
-    public List<Transaction> getAllTransactions() {
-        return new ArrayList<>(transactions);
+    public LinkedList<Transaction> getAllTransactions() {
+        return transactions;
     }
-
 
     public boolean addTransaction(Transaction transaction) {
-        // Validate transaction
         if (!validateTransaction(transaction)) {
             return false;
         }
 
-        // Add to in-memory list
+        transaction.setId(idCounter);
         transactions.add(transaction);
+        idCounter++;
 
-        // Save to persistent storage
         return dataAccess.saveTransaction(transaction);
     }
 
-
     public boolean updateTransaction(Transaction transaction) {
-        // Validate transaction
         if (!validateTransaction(transaction) || transaction.getId() <= 0) {
             return false;
         }
 
-        // Find and update in-memory list
         for (int i = 0; i < transactions.size(); i++) {
             if (transactions.get(i).getId() == transaction.getId()) {
                 transactions.set(i, transaction);
 
-                // Update in persistent storage
                 return dataAccess.updateTransaction(transaction);
             }
         }
 
-        return false; // Transaction not found
+        return false;
     }
 
     public boolean deleteTransaction(int transactionId) {
-        // Find and remove from in-memory list
         for (int i = 0; i < transactions.size(); i++) {
             if (transactions.get(i).getId() == transactionId) {
                 transactions.remove(i);
 
-                // Remove from persistent storage
                 return dataAccess.deleteTransaction(transactionId);
             }
         }
 
-        return false; // Transaction not found
+        return false;
     }
 
-    public List<Transaction> searchTransactions(String keyword, Category category,
-                                                Date startDate, Date endDate,
-                                                Double minAmount, Double maxAmount) {
-        // Start with all transactions
-        List<Transaction> results = new ArrayList<>(transactions);
+    public LinkedList<Transaction> searchTransactions(String keyword, Category category,
+                                                      Date startDate, Date endDate,
+                                                      Double minAmount, Double maxAmount) {
+        LinkedList<Transaction> results = new LinkedList<>();
 
-        // Apply filters
-        if (keyword != null && !keyword.isEmpty()) {
-            String lowerKeyword = keyword.toLowerCase();
-            results = results.stream()
-                    .filter(t -> t.getDescription().toLowerCase().contains(lowerKeyword))
-                    .collect(Collectors.toList());
-        }
+        for (int i = 0; i < transactions.size(); i++) {
+            Transaction t = transactions.get(i);
+            boolean matches = true;
 
-        if (category != null) {
-            results = results.stream()
-                    .filter(t -> t.getCategory() == category)
-                    .collect(Collectors.toList());
-        }
+            if (keyword != null && !keyword.isEmpty()) {
+                String lowerKeyword = keyword.toLowerCase();
+                if (t.getDescription() == null ||
+                        !t.getDescription().toLowerCase().contains(lowerKeyword)) {
+                    matches = false;
+                }
+            }
 
-        if (startDate != null) {
-            results = results.stream()
-                    .filter(t -> !t.getDate().before(startDate))
-                    .collect(Collectors.toList());
-        }
+            if (matches && category != null && t.getCategory() != category) {
+                matches = false;
+            }
 
-        if (endDate != null) {
-            results = results.stream()
-                    .filter(t -> !t.getDate().after(endDate))
-                    .collect(Collectors.toList());
-        }
+            if (matches && startDate != null && t.getDate().before(startDate)) {
+                matches = false;
+            }
 
-        if (minAmount != null) {
-            results = results.stream()
-                    .filter(t -> t.getAmount() >= minAmount)
-                    .collect(Collectors.toList());
-        }
+            if (matches && endDate != null && t.getDate().after(endDate)) {
+                matches = false;
+            }
 
-        if (maxAmount != null) {
-            results = results.stream()
-                    .filter(t -> t.getAmount() <= maxAmount)
-                    .collect(Collectors.toList());
+            if (matches && minAmount != null && t.getAmount() < minAmount) {
+                matches = false;
+            }
+
+            if (matches && maxAmount != null && t.getAmount() > maxAmount) {
+                matches = false;
+            }
+
+            if (matches) {
+                results.add(t);
+            }
         }
 
         return results;
     }
 
     public double getTotalIncome() {
-        return transactions.stream()
-                .filter(t -> t.getCategory() == Category.INCOME)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+        double total = 0;
+        for (int i = 0; i < transactions.size(); i++) {
+            Transaction t = transactions.get(i);
+            if (t.getCategory() == Category.INCOME) {
+                total += t.getAmount();
+            }
+        }
+        return total;
     }
-
 
     public double getTotalExpenses() {
-        return transactions.stream()
-                .filter(t -> t.getCategory() != Category.INCOME)
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+        double total = 0;
+        for (int i = 0; i < transactions.size(); i++) {
+            Transaction t = transactions.get(i);
+            if (t.getCategory() != Category.INCOME) {
+                total += t.getAmount();
+            }
+        }
+        return total;
     }
-
 
     public double getCurrentBalance() {
         return getTotalIncome() - getTotalExpenses();
     }
 
-
     private boolean validateTransaction(Transaction transaction) {
-        // Basic validation rules
         if (transaction == null) {
             return false;
         }
@@ -157,16 +148,21 @@ public class TransactionController {
             return false;
         }
 
-        // Amount validation (could be more complex based on requirements)
         if (transaction.getCategory() == Category.INCOME && transaction.getAmount() <= 0) {
-            return false; // Income should be positive
+            return false;
         }
 
         return true;
     }
 
-
     public void refreshData() {
         transactions = dataAccess.loadAllTransactions();
+
+        idCounter = 1;
+        for (int i = 0; i < transactions.size(); i++) {
+            if (transactions.get(i).getId() >= idCounter) {
+                idCounter = transactions.get(i).getId() + 1;
+            }
+        }
     }
 }

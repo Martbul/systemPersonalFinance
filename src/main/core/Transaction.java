@@ -1,33 +1,41 @@
 package main.core;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+        import java.text.SimpleDateFormat;
+        import java.util.Date;
 
 public class Transaction {
     private double amount;
     private Category category;
     private Date date;
-
+    private int id;
+    private String description;
 
     public Transaction() {
         this.date = new Date();
     }
 
-    public Transaction(double amount, Category category, Date date) {
+    public Transaction(double amount, Category category, Date date, String description) {
         setAmount(amount);
         setCategory(category);
         this.date = date != null ? date : new Date();
+        this.description = description != null ? description : "";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getAmount() {
         return amount;
     }
 
-
     public void setAmount(double amount) {
         if (amount < 0 && (this.category != null && this.category != Category.INCOME)) {
-            throw new Error("Amount cannot be negative for expenses. Use positive values.");
+            throw new IllegalArgumentException("Amount cannot be negative for expenses. Use positive values.");
         }
         this.amount = amount;
     }
@@ -44,7 +52,6 @@ public class Transaction {
         }
     }
 
-
     public Date getDate() {
         return date;
     }
@@ -53,6 +60,13 @@ public class Transaction {
         this.date = date != null ? date : new Date();
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Override
     public String toString() {
@@ -60,23 +74,24 @@ public class Transaction {
         return String.format("%s | %s | %.2f | %s",
                 dateFormat.format(date),
                 category,
-                amount);
+                amount,
+                description);
     }
-
 
     public String toFileString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return String.format("%s,%s,%.2f,%s",
+        return String.format("%s,%s,%.2f,%s,%d",
                 dateFormat.format(date),
                 category.name(),
-                amount);
+                amount,
+                description,
+                id);
     }
-
 
     public static Transaction fromFileString(String fileString) throws Exception {
         String[] parts = fileString.split(",");
 
-        if (parts.length < 4) {
+        if (parts.length < 5) {
             throw new Exception("Invalid transaction file format");
         }
 
@@ -84,11 +99,17 @@ public class Transaction {
         Date date = dateFormat.parse(parts[0]);
         Category category = Category.valueOf(parts[1]);
         double amount = Double.parseDouble(parts[2]);
+        String description = parts[3];
+        int id = Integer.parseInt(parts[4]);
 
-        return new Transaction(amount, category, date);
+        Transaction transaction = new Transaction(amount, category, date, description);
+        transaction.setId(id);
+        return transaction;
     }
 
     public Transaction copy() {
-        return new Transaction(this.amount, this.category, (Date) this.date.clone());
+        Transaction copy = new Transaction(this.amount, this.category, (Date) this.date.clone(), this.description);
+        copy.setId(this.id);
+        return copy;
     }
 }

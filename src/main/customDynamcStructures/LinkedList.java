@@ -29,19 +29,21 @@ public class LinkedList<T> {
         if (head == null) {
             head = newNode;
         } else {
-
             Node<T> current = head;
             while (current.next != null) {
-
-
                 current = current.next;
             }
             current.next = newNode;
         }
 
-
         size++;
     }
+
+
+    public void add(T element, int id) {
+        add(element);
+    }
+
     public T remove(int index) {
         if (index < 0 || index >= size) {
             throw new Error("indexut e izwyn goleminata");
@@ -74,7 +76,6 @@ public class LinkedList<T> {
 
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
-
             current = current.next;
         }
         current.data = element;
@@ -94,8 +95,6 @@ public class LinkedList<T> {
 
     @Override
     public String toString() {
-
-
         String res="[";
         Node<T> curr=head;
 
