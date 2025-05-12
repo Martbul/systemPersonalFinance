@@ -1,5 +1,6 @@
 package main.customDynamcStructures;
 
+
 public class LinkedList<T> {
     private Node<T> head;
     private int size;

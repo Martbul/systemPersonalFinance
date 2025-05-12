@@ -5,13 +5,11 @@ package main.ui;
 
         import javax.swing.table.AbstractTableModel;
         import java.text.SimpleDateFormat;
-        import java.util.Date;
-
 
 public class TransactionTableUI extends AbstractTableModel {
         private LinkedList<Transaction> transactions;
-        private final String[] columnNames = {"ID", "Date", "Category", "Amount", "Description"};
-        private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        private final String[] columnNames = {"ID", "Дата", "Категория", "Сума", "Описание"};
+        private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         public TransactionTableUI(LinkedList<Transaction> transactions) {
                 this.transactions = transactions;
@@ -50,9 +48,7 @@ public class TransactionTableUI extends AbstractTableModel {
                 }
         }
 
-        /**
-         * Get the transaction at the specified row
-         */
+
         public Transaction getTransactionAt(int rowIndex) {
                 if (rowIndex >= 0 && rowIndex < transactions.size()) {
                         return transactions.get(rowIndex);
@@ -60,9 +56,7 @@ public class TransactionTableUI extends AbstractTableModel {
                 return null;
         }
 
-        /**
-         * Refresh the data in the table model
-         */
+
         public void refreshData(LinkedList<Transaction> newTransactions) {
                 this.transactions = newTransactions;
         }

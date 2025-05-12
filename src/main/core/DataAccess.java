@@ -11,7 +11,6 @@ public class DataAccess {
 
     public boolean saveTransaction(Transaction transaction) {
         try {
-            // Append to file
             FileWriter fw = new FileWriter(DATA_FILE, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(transaction.toFileString());
@@ -19,7 +18,7 @@ public class DataAccess {
             bw.close();
             return true;
         } catch (IOException e) {
-            System.err.println("Error saving transaction: " + e.getMessage());
+            System.err.println("Грешка при запазване на транзакцията " + e.getMessage());
             return false;
         }
     }
@@ -28,7 +27,6 @@ public class DataAccess {
     public boolean updateTransaction(Transaction transaction) {
         LinkedList<Transaction> allTransactions = loadAllTransactions();
 
-        // Find and replace the transaction
         boolean found = false;
         for (int i = 0; i < allTransactions.size(); i++) {
             if (allTransactions.get(i).getId() == transaction.getId()) {
@@ -42,14 +40,12 @@ public class DataAccess {
             return false;
         }
 
-        // Write all transactions back to file
         return saveAllTransactions(allTransactions);
     }
 
     public boolean deleteTransaction(int transactionId) {
         LinkedList<Transaction> allTransactions = loadAllTransactions();
 
-        // Find and remove the transaction
         boolean found = false;
         for (int i = 0; i < allTransactions.size(); i++) {
             if (allTransactions.get(i).getId() == transactionId) {
@@ -63,7 +59,6 @@ public class DataAccess {
             return false;
         }
 
-        // Write all transactions back to file
         return saveAllTransactions(allTransactions);
     }
 
@@ -91,7 +86,7 @@ public class DataAccess {
 
             reader.close();
         } catch (IOException e) {
-            System.err.println("Error loading transactions: " + e.getMessage());
+            System.err.println("Грешка: " + e.getMessage());
         }
 
         return transactions;
@@ -111,7 +106,7 @@ public class DataAccess {
             bw.close();
             return true;
         } catch (IOException e) {
-            System.err.println("Error saving transactions: " + e.getMessage());
+            System.err.println("Грешка: " + e.getMessage());
             return false;
         }
     }

@@ -70,7 +70,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return String.format("%s | %s | %.2f | %s",
                 dateFormat.format(date),
                 category,
@@ -79,7 +79,7 @@ public class Transaction {
     }
 
     public String toFileString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return String.format("%s,%s,%.2f,%s,%d",
                 dateFormat.format(date),
                 category.name(),
@@ -95,7 +95,7 @@ public class Transaction {
             throw new Exception("Invalid transaction file format");
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = dateFormat.parse(parts[0]);
         Category category = Category.valueOf(parts[1]);
         double amount = Double.parseDouble(parts[2]);

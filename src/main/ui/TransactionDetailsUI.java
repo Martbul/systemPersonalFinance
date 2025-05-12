@@ -1,81 +1,57 @@
 
 package main.ui;
 
-        import main.core.Transaction;
+import main.core.Transaction;
 
-        import javax.swing.*;
-        import java.awt.*;
-        import java.text.SimpleDateFormat;
-
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.text.SimpleDateFormat;
 
 public class TransactionDetailsUI extends JPanel {
-    private JLabel idLabel;
-    private JLabel dateLabel;
-    private JLabel categoryLabel;
-    private JLabel amountLabel;
-    private JLabel descriptionLabel;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private JTable detailsTable;
+    private DefaultTableModel tableModel;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public TransactionDetailsUI() {
-        setLayout(new GridBagLayout());
-        setBorder(BorderFactory.createTitledBorder("Transaction Details"));
-
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createTitledBorder("Детайли"));
         initComponents();
+
+        Dimension fixedSize = new Dimension(350, 150);
+        setPreferredSize(fixedSize);
+        setMaximumSize(fixedSize);
+        setMinimumSize(fixedSize);
     }
 
     private void initComponents() {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        String[] columnNames = {"", "Стойност"};
 
-        // Create and add field labels
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(new JLabel("ID:"), gbc);
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(new JLabel("Date:"), gbc);
+        detailsTable = new JTable(tableModel);
+        detailsTable.setRowHeight(25);
+        detailsTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        detailsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        add(new JLabel("Category:"), gbc);
+        initializeTableData();
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        add(new JLabel("Amount:"), gbc);
+        add(detailsTable, BorderLayout.CENTER);
+    }
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        add(new JLabel("Description:"), gbc);
+    private void initializeTableData() {
+        tableModel.setRowCount(0);
 
-        // Create and add value labels
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        idLabel = new JLabel("");
-        add(idLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        dateLabel = new JLabel("");
-        add(dateLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        categoryLabel = new JLabel("");
-        add(categoryLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        amountLabel = new JLabel("");
-        add(amountLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 4;
-        descriptionLabel = new JLabel("");
-        add(descriptionLabel, gbc);
+        tableModel.addRow(new Object[]{"ID", ""});
+        tableModel.addRow(new Object[]{"Дата", ""});
+        tableModel.addRow(new Object[]{"Категория", ""});
+        tableModel.addRow(new Object[]{"Сума", ""});
+        tableModel.addRow(new Object[]{"Описание", ""});
     }
 
     public void displayTransaction(Transaction transaction) {
@@ -84,18 +60,16 @@ public class TransactionDetailsUI extends JPanel {
             return;
         }
 
-        idLabel.setText(String.valueOf(transaction.getId()));
-        dateLabel.setText(dateFormat.format(transaction.getDate()));
-        categoryLabel.setText(transaction.getCategory().toString());
-        amountLabel.setText(String.format("%.2f", transaction.getAmount()));
-        descriptionLabel.setText(transaction.getDescription());
+        tableModel.setValueAt(String.valueOf(transaction.getId()), 0, 1);
+        tableModel.setValueAt(dateFormat.format(transaction.getDate()), 1, 1);
+        tableModel.setValueAt(transaction.getCategory().toString(), 2, 1);
+        tableModel.setValueAt(String.format("%.2f", transaction.getAmount()), 3, 1);
+        tableModel.setValueAt(transaction.getDescription(), 4, 1);
     }
 
     private void clearFields() {
-        idLabel.setText("");
-        dateLabel.setText("");
-        categoryLabel.setText("");
-        amountLabel.setText("");
-        descriptionLabel.setText("");
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            tableModel.setValueAt("", i, 1);
+        }
     }
 }

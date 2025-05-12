@@ -17,7 +17,7 @@ public class Start extends JFrame {
         private TransactionDetailsUI detailPanel;
 
         public Start() {
-                setTitle("Transaction Management System");
+                setTitle("Система за управление на финанси");
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 setSize(800, 600);
                 setLocationRelativeTo(null);
@@ -42,32 +42,21 @@ public class Start extends JFrame {
         private void setupLayout() {
                 setLayout(new BorderLayout());
 
-                // Create a split pane for table and details
                 JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-                // Table panel with scroll pane
                 JScrollPane tableScrollPane = new JScrollPane(transactionTable);
                 tableScrollPane.setPreferredSize(new Dimension(750, 300));
 
-                // Add components to split pane
                 splitPane.setTopComponent(tableScrollPane);
                 splitPane.setBottomComponent(detailPanel);
                 splitPane.setResizeWeight(0.7);
 
-                // Create tabs for add and search functionality
                 JTabbedPane tabbedPane = new JTabbedPane();
-                tabbedPane.addTab("Add Transaction", addPanel);
-                tabbedPane.addTab("Search", searchPanel);
+                tabbedPane.addTab("Добавяне", addPanel);
+                tabbedPane.addTab("Търсене", searchPanel);
 
-                // Add components to frame
                 add(tabbedPane, BorderLayout.NORTH);
                 add(splitPane, BorderLayout.CENTER);
-
-                // Status bar
-                JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                JLabel statusLabel = new JLabel("Ready");
-                statusBar.add(statusLabel);
-                add(statusBar, BorderLayout.SOUTH);
         }
 
         private void addEventListeners() {
