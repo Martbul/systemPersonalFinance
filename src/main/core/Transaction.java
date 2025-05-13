@@ -35,7 +35,7 @@ public class Transaction {
 
     public void setAmount(double amount) {
         if (amount < 0 && (this.category != null && this.category != Category.INCOME)) {
-            throw new IllegalArgumentException("Amount cannot be negative for expenses. Use positive values.");
+            throw new Error("Сумата трбва да е положителна");
         }
         this.amount = amount;
     }
@@ -48,7 +48,7 @@ public class Transaction {
         this.category = category;
 
         if (category != Category.INCOME && this.amount < 0) {
-            throw new IllegalArgumentException("Amount cannot be negative for expenses. Use positive values.");
+            throw new Error("Сумата трбва да е положителна");
         }
     }
 
@@ -92,7 +92,7 @@ public class Transaction {
         String[] parts = fileString.split(",");
 
         if (parts.length < 5) {
-            throw new Exception("Invalid transaction file format");
+            throw new Error("Грешен фила формат");
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");

@@ -57,7 +57,7 @@ public class Search extends JPanel {
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value == null) {
-                    setText("Any");
+                    setText("");
                 }
                 return this;
             }
@@ -112,7 +112,7 @@ public class Search extends JPanel {
                 try {
                     startDate = dateFormat.parse(startDateField.getText().trim());
                 } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Invalid start date format. Use yyyy-MM-dd",
+                    JOptionPane.showMessageDialog(this, "Грешна начална дата",
                             "Грешка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -123,7 +123,7 @@ public class Search extends JPanel {
                 try {
                     endDate = dateFormat.parse(endDateField.getText().trim());
                 } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Invalid end date format. Use yyyy-MM-dd",
+                    JOptionPane.showMessageDialog(this, "Грешна крайна дата",
                             "Грешка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -134,7 +134,7 @@ public class Search extends JPanel {
                 try {
                     minAmount = Double.parseDouble(minAmountField.getText().trim());
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Invalid minimum amount format",
+                    JOptionPane.showMessageDialog(this, "Невалидна минимална сума",
                             "Грешка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -145,7 +145,7 @@ public class Search extends JPanel {
                 try {
                     maxAmount = Double.parseDouble(maxAmountField.getText().trim());
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Invalid maximum amount format",
+                    JOptionPane.showMessageDialog(this, "Невалидна максимална сума",
                             "Грешка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
