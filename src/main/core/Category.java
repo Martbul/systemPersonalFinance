@@ -1,12 +1,12 @@
 package main.core;
 
 public enum Category {
-        INCOME("Доход"),
-        FOOD("Храна"),
-        TRANSPORTATION("Транспорт"),
-        ENTERTAINMENT("Забавления"),
-        HEALTHCARE("Здраве"),
-        OTHER("Друго");
+        ДОХОД("Доход"),
+        ХРАНА("Храна"),
+        ТРАНСПОРТ("Транспорт"),
+        ЗАБАВЛЕНИЯ("Забавления"),
+        ЗДРАВЕ("Здраве"),
+        ДРУГО("Друго");
 
         private final String displayName;
 

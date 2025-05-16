@@ -9,23 +9,17 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Search extends JPanel {
     private final TransactionController controller;
     private JTextField keywordField;
     private JComboBox<Category> categoryComboBox;
-    private JTextField startDateField;
-    private JTextField endDateField;
     private JTextField minAmountField;
     private JTextField maxAmountField;
     private JButton searchButton;
     private JButton resetButton;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("дд-мм-гггг");
     private JTable criteriaTable;
     private DefaultTableModel tableModel;
 
@@ -63,16 +57,12 @@ public class Search extends JPanel {
             }
         });
 
-        startDateField = new JTextField(10);
-        endDateField = new JTextField(10);
         minAmountField = new JTextField(10);
         maxAmountField = new JTextField(10);
 
         JPanel tablePanel = new JPanel(new GridLayout(6, 1, 5, 5));
         tablePanel.add(createLabeledPanel("Дума:", keywordField));
         tablePanel.add(createLabeledPanel("Категория:", categoryComboBox));
-        tablePanel.add(createLabeledPanel("От:", startDateField));
-        tablePanel.add(createLabeledPanel("До:", endDateField));
         tablePanel.add(createLabeledPanel("Мин сума:", minAmountField));
         tablePanel.add(createLabeledPanel("Макс сума:", maxAmountField));
 
@@ -107,27 +97,8 @@ public class Search extends JPanel {
 
             Category category = (Category) categoryComboBox.getSelectedItem();
 
-            Date startDate = null;
-            if (!startDateField.getText().trim().isEmpty()) {
-                try {
-                    startDate = dateFormat.parse(startDateField.getText().trim());
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Грешна начална дата",
-                            "Грешка", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
 
-            Date endDate = null;
-            if (!endDateField.getText().trim().isEmpty()) {
-                try {
-                    endDate = dateFormat.parse(endDateField.getText().trim());
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Грешна крайна дата",
-                            "Грешка", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
+
 
             Double minAmount = null;
             if (!minAmountField.getText().trim().isEmpty()) {
@@ -152,7 +123,7 @@ public class Search extends JPanel {
             }
 
             LinkedList<Transaction> results = controller.searchTransactions(
-                    keyword, category, startDate, endDate, minAmount, maxAmount);
+                    keyword, category, minAmount, maxAmount);
 
             notifyListeners(results);
 
@@ -165,8 +136,6 @@ public class Search extends JPanel {
     private void resetAction(ActionEvent e) {
         keywordField.setText("");
         categoryComboBox.setSelectedIndex(0);
-        startDateField.setText("");
-        endDateField.setText("");
         minAmountField.setText("");
         maxAmountField.setText("");
 

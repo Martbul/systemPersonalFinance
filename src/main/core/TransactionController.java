@@ -59,9 +59,7 @@ public class TransactionController {
         return false;
     }
 
-    public LinkedList<Transaction> searchTransactions(String keyword, Category category,
-                                                      Date startDate, Date endDate,
-                                                      Double minAmount, Double maxAmount) {
+    public LinkedList<Transaction> searchTransactions(String keyword, Category category, Double minAmount, Double maxAmount) {
         LinkedList<Transaction> results = new LinkedList<>();
 
         for (int i = 0; i < transactions.size(); i++) {
@@ -80,13 +78,6 @@ public class TransactionController {
                 matches = false;
             }
 
-            if (matches && startDate != null && t.getDate().before(startDate)) {
-                matches = false;
-            }
-
-            if (matches && endDate != null && t.getDate().after(endDate)) {
-                matches = false;
-            }
 
             if (matches && minAmount != null && t.getAmount() < minAmount) {
                 matches = false;
@@ -108,7 +99,7 @@ public class TransactionController {
         double total = 0;
         for (int i = 0; i < transactions.size(); i++) {
             Transaction t = transactions.get(i);
-            if (t.getCategory() == Category.INCOME) {
+            if (t.getCategory() == Category.ДОХОД) {
                 total += t.getAmount();
             }
         }
@@ -119,7 +110,7 @@ public class TransactionController {
         double total = 0;
         for (int i = 0; i < transactions.size(); i++) {
             Transaction t = transactions.get(i);
-            if (t.getCategory() != Category.INCOME) {
+            if (t.getCategory() != Category.ДОХОД) {
                 total += t.getAmount();
             }
         }
@@ -147,7 +138,7 @@ public class TransactionController {
             return false;
         }
 
-        if (transaction.getCategory() == Category.INCOME && transaction.getAmount() <= 0) {
+        if (transaction.getCategory() == Category.ДОХОД && transaction.getAmount() <= 0) {
             return false;
         }
 

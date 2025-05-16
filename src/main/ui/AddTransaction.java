@@ -45,7 +45,7 @@ public class AddTransaction extends JPanel {
         inputPanel.add(createLabeledPanel("Описани:", descriptionField));
         inputPanel.add(createLabeledPanel("Сума:", amountField));
         inputPanel.add(createLabeledPanel("Категория:", categoryComboBox));
-        inputPanel.add(createLabeledPanel("Дата (дд-мм-гггг):", dateField));
+        inputPanel.add(createLabeledPanel("Дата:", dateField));
 
         formPanel.add(inputPanel, BorderLayout.CENTER);
 

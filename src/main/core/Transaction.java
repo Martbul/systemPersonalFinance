@@ -34,7 +34,7 @@ public class Transaction {
     }
 
     public void setAmount(double amount) {
-        if (amount < 0 && (this.category != null && this.category != Category.INCOME)) {
+        if (amount < 0 && (this.category != null && this.category != Category.ДОХОД)) {
             throw new Error("Сумата трбва да е положителна");
         }
         this.amount = amount;
@@ -47,7 +47,7 @@ public class Transaction {
     public void setCategory(Category category) {
         this.category = category;
 
-        if (category != Category.INCOME && this.amount < 0) {
+        if (category != Category.ДОХОД && this.amount < 0) {
             throw new Error("Сумата трбва да е положителна");
         }
     }

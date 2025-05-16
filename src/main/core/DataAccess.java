@@ -2,8 +2,6 @@ package main.core;
 
         import main.customDynamcStructures.LinkedList;
         import java.io.*;
-        import java.text.SimpleDateFormat;
-        import java.util.Date;
 
 
 public class DataAccess {
@@ -80,7 +78,7 @@ public class DataAccess {
                     Transaction transaction = Transaction.fromFileString(line);
                     transactions.add(transaction);
                 } catch (Exception e) {
-                    System.err.println("Error parsing transaction: " + e.getMessage());
+                    System.err.println("грешка: " + e.getMessage());
                 }
             }
 
